@@ -9,6 +9,7 @@ using MySpot.Modules.Notifications.Api.DAL;
 using MySpot.Shared.Abstractions.Dispatchers;
 using MySpot.Shared.Abstractions.Modules;
 using MySpot.Shared.Infrastructure;
+using MySpot.Shared.Infrastructure.Modules;
 using MySpot.Shared.Infrastructure.Postgres;
 
 namespace MySpot.Modules.Notifications.Api;
@@ -31,6 +32,11 @@ internal sealed class NotificationsModule : IModule
 
     public void Use(IApplicationBuilder app)
     {
+        app.UseModuleRequests()
+            .Subscribe<SendEmail>("emails/send", async (command, serviceProvider, ct) =>
+            {
+                await Task.CompletedTask;
+            });
     }
 
     public void Expose(IEndpointRouteBuilder endpoints)
