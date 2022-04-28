@@ -39,6 +39,13 @@ internal sealed class ParkingSpotsModule : IModule
             await service.UpdateAsync(parkingSpot);
             return Results.NoContent();
         }).WithTags("Parking spots").WithName("Update parking spot");
+        
+        endpoints.MapPost("/parking-spots", async (ParkingSpot parkingSpot, IParkingSpotsService service) =>
+        {
+            parkingSpot.Id = Guid.NewGuid();
+            await service.AddAsync(parkingSpot);
+            return Results.NoContent();
+        }).WithTags("Parking spots").WithName("Add parking spot");
 
         endpoints.MapDelete("/parking-spots/{id:guid}", async (Guid id, IParkingSpotsService service) =>
         {
