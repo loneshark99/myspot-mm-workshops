@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MySpot.Modules.ParkingSpots.Core.Clients;
 using MySpot.Modules.ParkingSpots.Core.DAL;
 using MySpot.Modules.ParkingSpots.Core.Services;
 using MySpot.Shared.Infrastructure.Postgres;
@@ -14,6 +15,7 @@ internal static class Extensions
     public static IServiceCollection AddCore(this IServiceCollection services, IConfiguration configuration)
     {
         return services
+            .AddSingleton<IAvailabilityApiClient, AvailabilityApiClient>()
             .AddScoped<IParkingSpotsService, ParkingSpotsService>()
             .AddPostgres<ParkingSpotsDbContext>(configuration)
             .AddUnitOfWork<ParkingSpotsUnitOfWork>();
