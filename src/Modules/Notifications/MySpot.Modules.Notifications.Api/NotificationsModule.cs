@@ -6,9 +6,11 @@ using Microsoft.Extensions.DependencyInjection;
 using MySpot.Modules.Notifications.Api.Clients;
 using MySpot.Modules.Notifications.Api.Commands;
 using MySpot.Modules.Notifications.Api.DAL;
+using MySpot.Modules.Notifications.Api.Events.External;
 using MySpot.Shared.Abstractions.Dispatchers;
 using MySpot.Shared.Abstractions.Modules;
 using MySpot.Shared.Infrastructure;
+using MySpot.Shared.Infrastructure.Contracts;
 using MySpot.Shared.Infrastructure.Modules;
 using MySpot.Shared.Infrastructure.Postgres;
 
@@ -37,6 +39,9 @@ internal sealed class NotificationsModule : IModule
             {
                 await Task.CompletedTask;
             });
+
+        app.UseContracts()
+            .Register<SignedUpContract>();
     }
 
     public void Expose(IEndpointRouteBuilder endpoints)

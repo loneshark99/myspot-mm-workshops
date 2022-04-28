@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using MySpot.Shared.Abstractions;
 using MySpot.Shared.Infrastructure;
+using MySpot.Shared.Infrastructure.Contracts;
 using MySpot.Shared.Infrastructure.Logging;
 using MySpot.Shared.Infrastructure.Modules;
 
@@ -27,6 +28,8 @@ foreach (var module in modules)
 {
     module.Use(app);
 }
+
+app.ValidateContracts(assemblies);
 
 app.MapGet("/", (AppInfo appInfo) => appInfo).WithTags("API").WithName("Info");
 
