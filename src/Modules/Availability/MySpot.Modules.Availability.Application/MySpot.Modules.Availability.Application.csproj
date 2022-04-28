@@ -8,8 +8,4 @@
       <ProjectReference Include="..\MySpot.Modules.Availability.Core\MySpot.Modules.Availability.Core.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Events\External" />
-    </ItemGroup>
-
 </Project>
