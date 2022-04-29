@@ -6,6 +6,7 @@ using MySpot.Modules.Users.Core.DAL.Repositories;
 using MySpot.Modules.Users.Core.Repositories;
 using MySpot.Modules.Users.Core.Services;
 using MySpot.Shared.Infrastructure;
+using MySpot.Shared.Infrastructure.Messaging.Outbox;
 using MySpot.Shared.Infrastructure.Postgres;
 
 [assembly: InternalsVisibleTo("MySpot.Modules.Users.Api")]
@@ -28,6 +29,7 @@ internal static class Extensions
             .AddScoped<IRoleRepository, RoleRepository>()
             .AddScoped<IUserRepository, UserRepository>()
             .AddPostgres<UsersDbContext>(configuration)
+            .AddOutbox<UsersDbContext>(configuration)
             .AddUnitOfWork<UsersUnitOfWork>()
             .AddInitializer<UsersInitializer>();
     }

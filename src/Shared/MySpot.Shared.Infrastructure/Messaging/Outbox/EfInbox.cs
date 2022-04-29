@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using MySpot.Shared.Abstractions.Time;
 
 namespace MySpot.Shared.Infrastructure.Messaging.Outbox;
@@ -17,14 +18,14 @@ public class EfInbox<T> : IInbox where T : DbContext
 
     public bool Enabled { get; }
 
-    public EfInbox(T dbContext, IClock clock, OutboxOptions outboxOptions, ILogger<EfInbox<T>> logger)
+    public EfInbox(T dbContext, IClock clock, IOptions<OutboxOptions> outboxOptions, ILogger<EfInbox<T>> logger)
     {
         _dbContext = dbContext;
         _set = dbContext.Set<InboxMessage>();
         _clock = clock;
         _logger = logger;
-        Enabled = outboxOptions.Enabled;
-        _transactionsEnabled = !outboxOptions.TransactionsDisabled;
+        Enabled = outboxOptions.Value.Enabled;
+        _transactionsEnabled = !outboxOptions.Value.TransactionsDisabled;
     }
 
     public async Task HandleAsync(Guid messageId, string name, Func<Task> handler)

@@ -11,6 +11,7 @@ using MySpot.Shared.Abstractions.Dispatchers;
 using MySpot.Shared.Abstractions.Modules;
 using MySpot.Shared.Infrastructure;
 using MySpot.Shared.Infrastructure.Contracts;
+using MySpot.Shared.Infrastructure.Messaging.Outbox;
 using MySpot.Shared.Infrastructure.Modules;
 using MySpot.Shared.Infrastructure.Postgres;
 
@@ -27,7 +28,9 @@ internal sealed class NotificationsModule : IModule
     
     public void Register(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddPostgres<NotificationsDbContext>(configuration)
+        services
+            .AddPostgres<NotificationsDbContext>(configuration)
+            .AddOutbox<NotificationsDbContext>(configuration)
             .AddInitializer<NotificationsInitializer>()
             .AddSingleton<IEmailApiClient, EmailApiClient>();
     }
