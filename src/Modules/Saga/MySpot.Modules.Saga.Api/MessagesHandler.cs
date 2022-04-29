@@ -8,7 +8,8 @@ namespace MySpot.Modules.Saga.Api;
 
 internal sealed class MessagesHandler :
     IEventHandler<ParkingSpotReserved>,
-    IEventHandler<ResourceReserved>
+    IEventHandler<ResourceReserved>,
+    IEventHandler<ResourceReservationFailed>
 {
     private readonly ISagaCoordinator _sagaCoordinator;
 
@@ -21,6 +22,9 @@ internal sealed class MessagesHandler :
         => ProcessAsync(@event);
 
     public Task HandleAsync(ResourceReserved @event, CancellationToken cancellationToken = default)
+        => ProcessAsync(@event);
+    
+    public Task HandleAsync(ResourceReservationFailed @event, CancellationToken cancellationToken = default)
         => ProcessAsync(@event);
 
     private Task ProcessAsync<T>(T message) where T : class =>

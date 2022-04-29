@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MySpot.Modules.Availability.Application.Events;
@@ -24,15 +25,25 @@ internal sealed class ReserveResourceHandler : ICommandHandler<ReserveResource>
     public async Task HandleAsync(ReserveResource command, CancellationToken cancellationToken = default)
     {
         var (resourceId, reservationId, capacity, date, priority) = command;
-        var resource = await _repository.GetAsync(resourceId);
-        if (resource is null)
-        {
-            throw new ResourceNotFoundException(resourceId);
-        }
 
-        var reservation = new Reservation(reservationId, capacity, new Date(date), priority);
-        resource.AddReservation(reservation);
-        await _repository.UpdateAsync(resource);
-        await _messageBroker.PublishAsync(new ResourceReserved(resourceId, date), cancellationToken);
+        
+        try
+        {
+            var resource = await _repository.GetAsync(resourceId);
+            if (resource is null)
+            {
+                throw new ResourceNotFoundException(resourceId);
+            }
+
+            var reservation = new Reservation(reservationId, capacity, new Date(date), priority);
+            resource.AddReservation(reservation);
+            await _repository.UpdateAsync(resource);
+            await _messageBroker.PublishAsync(new ResourceReserved(resourceId, date), cancellationToken);
+        }
+        catch
+        {
+            await _messageBroker.PublishAsync(new ResourceReservationFailed(resourceId, date), cancellationToken);
+            throw;
+        }
     }
 }
